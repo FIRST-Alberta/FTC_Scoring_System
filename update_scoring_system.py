@@ -3,6 +3,8 @@ from io import BytesIO
 import json
 import requests
 from pathlib import Path
+import os
+
 
 """This program is meant to update the FTC Scorekeeper software if necessary.
 
@@ -14,8 +16,9 @@ Program Flow:
 """
 
 __SCOREKEEPER_RELEASE_URL__ = "https://api.github.com/repos/FIRST-Tech-Challenge/scorekeeper/releases/latest"
+__INSTALL_LOCATION__ = Path("/usr/local/src/scorekeeper")
 
-def get_Scorekeeper_Release_Info() -> dict:
+def _get_Scorekeeper_Release_Info() -> dict:
     """This function fetches the latest release tag 
        and download URL of scorekeeper from Github
     """
@@ -40,17 +43,69 @@ def get_Scorekeeper_Release_Info() -> dict:
 
     return {"Version": release_tag, "URL": download_url}
 
-def download_Scorekeeper(url: str, path: Path):
+def download_Scorekeeper(url: str) -> Path:
     """This function downloads the newest scorekeeper zip"""
-    filename = str(path / "Scorekeeper.zip")
+    temp_dir = Path("/tmp/scoring")
+    if not temp_dir.exists():
+        os.mkdir(str(temp_dir))
+    filename = str(temp_dir / "scorekeeper.zip")
     download_request = requests.get(url, allow_redirects=True)
 
     with open(filename, 'wb') as file:
         file.write(download_request.content)
 
+    return temp_dir / "scorekeeper.zip"
+
+def install_Scorekeeper(zip_path: Path, version: str):
+    """This function will uncompress the zip folder 
+    and install it in __INSTALL_LOCATION__."""
+    if not __INSTALL_LOCATION__.exists():
+        if not __INSTALL_LOCATION__.is_dir():
+            print("The install location is not a directory!")
+            return False
+        os.mkdir(str(__INSTALL_LOCATION__))
+    else:
+        os.system("rm -rf {}/*".format(__INSTALL_LOCATION__))
+    if not zip_path.exists() or not zip_path.is_file():
+        print("The Zip file does not exist or is not a file")
+        return False
+    os.system("unzip {} -d {}".format(zip_path, zip_path.parent))
+    for item in zip_path.parent.iterdir():
+        if item.is_dir():
+            os.system("mv {}/* {}/".format(str(item), str(__INSTALL_LOCATION__)))
+    with open(str(__INSTALL_LOCATION__ / "version.txt"), "w") as version_file:
+        version_file.write(version)
+    return True
+
+def _check_For_Newer_Scorekeeper():
+    release_info = _get_Scorekeeper_Release_Info()
+    new_version = release_info["Version"].split('v')[1].split('.')
+    for digit in new_version:
+        digit = int(digit)
+    try:
+        with open(str(__INSTALL_LOCATION__ / "version.txt"), "r") as version_file:
+            old_version = version_file.read().split('v')[1].split('.')
+    except:
+        return release_info
+    for digit in old_version:
+        digit = int(digit)
+    if new_version[0] > old_version[0]:
+        return release_info
+    elif new_version[1] > old_version[1]:
+        return release_info
+    elif new_version[2] > old_version[2]:
+        return release_info
+    else:
+        return None
+    
+
 
 #### Code Entry ####
-release_info = get_Scorekeeper_Release_Info()
-print("Release Tag: ", release_info["Version"])
-print("Download URL: ", release_info["URL"])
-download_Scorekeeper(release_info["URL"], Path("/home/ftc/Downloads"))
+
+release_info = _check_For_Newer_Scorekeeper()
+if not release_info:
+    print("Scorekeeper is already the newest version!")
+else:
+    zip_path = download_Scorekeeper(release_info["URL"])
+    status = install_Scorekeeper(zip_path, release_info["Version"])
+    print("Installation {} successful!".format("was" if status is True else "wasn't"))
