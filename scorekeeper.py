@@ -1,9 +1,13 @@
+#!/home/ftc/Documents/FTC_Scoring_System/venv/bin/python
+
 import pycurl
 from io import BytesIO
 import json
 import requests
 from pathlib import Path
 import os
+import argparse
+from lib.common.utilities import Run_Cmd
 
 
 """This program is meant to update the FTC Scorekeeper software if necessary.
@@ -102,10 +106,24 @@ def _check_For_Newer_Scorekeeper():
 
 #### Code Entry ####
 
-release_info = _check_For_Newer_Scorekeeper()
-if not release_info:
-    print("Scorekeeper is already the newest version!")
+arg_parser = argparse.ArgumentParser(add_help="This program aids setup of the FTC Scoring System.")
+arg_parser.add_argument("cmd", help="Command. start, stop, update, or restart", type=str)
+args = arg_parser.parse_args()
+if args.cmd == "start":
+    Run_Cmd("sudo systemctl start scorekeeper")
+elif args.cmd == "stop":
+    Run_Cmd("sudo systemctl stop scorekeeper")
+elif args.cmd == "restart":
+    Run_Cmd("sudo systemctl restart scorekeeper")
+elif args.cmd == "update":
+    Run_Cmd("sudo systemctl stop scorekeeper")
+    release_info = _check_For_Newer_Scorekeeper()
+    if not release_info:
+        print("Scorekeeper is already the newest version!")
+    else:
+        zip_path = download_Scorekeeper(release_info["URL"])
+        status = install_Scorekeeper(zip_path, release_info["Version"])
+        print("Installation {} successful!".format("was" if status is True else "wasn't"))
+    Run_Cmd("sudo systemctl start scorekeeper")
 else:
-    zip_path = download_Scorekeeper(release_info["URL"])
-    status = install_Scorekeeper(zip_path, release_info["Version"])
-    print("Installation {} successful!".format("was" if status is True else "wasn't"))
+    print("Please provide a valid command.")

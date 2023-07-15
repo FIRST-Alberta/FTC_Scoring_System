@@ -1,0 +1,8 @@
+<service-group>
+  <name>cgy3</name>
+  <service>
+    <type>_display._tcp</type>
+    <port>22</port>
+    <txt-record>Description=FTC Display CGY3</txt-record>
+  </service>
+</service-group>

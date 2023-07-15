@@ -1,0 +1,12 @@
+[Unit]
+Description=A Systemd Service to Run the FTC Scoring System installed on the system
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+ExecStart=/bin/bash /usr/local/src/scorekeeper/FIRST-Tech-Challenge-Live-UNIX
+
+[Install]
+WantedBy=multi-user.target
