@@ -1,11 +1,14 @@
 from .common.mdns_interface import MDNS_Interface
 from tabulate import tabulate
+from .display import Display
+from .common.utilities import Run_Cmd
 
 class Display_Manager():
 
     def __init__(self):
         self.mdns = MDNS_Interface("_display._tcp")
         self.update_Display_List()
+        self.server_hostname = Run_Cmd("hostname") + ".local"
 
     @property
     def displays(self):
@@ -19,18 +22,7 @@ class Display_Manager():
         for record in self.displays:
             table.append([record.hostname, record.name, record.IP, record.text])
         print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
-
-    def hostname_Valid(self, hostname:str)->bool:
-        for record in self.displays:
-            if hostname == record.hostname:
-                print("{} is a valid hostname.".format(hostname))
-                return True
-        else:
-            print("{} is not a valid hostname.".format(hostname))
-            return False
-
-    def get_Hostname(self)-> str:
-        hostname = input("Please enter a hostname:")
-        while not self.hostname_Valid(hostname):
-            hostname = input("Please enter a hostname:")
-        return hostname
+    
+    def config_Display(self, hostname, role, event):
+        display = Display(hostname)
+        display.Build_Config(self.server_hostname, event, role)

@@ -25,17 +25,3 @@ class Event_Manager():
         for entry in self.events.values():
             table.append([entry.code, entry.name, entry.start, entry.end])
         print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
-
-    def event_Code_Valid(self, eventcode:str)->bool:
-        if eventcode in self.events.keys():
-            print("{} is a valid event code.".format(eventcode))
-            return True
-        else:
-            print("{} is not a valid event code.".format(eventcode))
-            return False
-
-    def get_Event_Code(self)-> str:
-        eventcode = input("Please enter a event code:")
-        while not self.event_Code_Valid(eventcode):
-            eventcode = input("Please enter a event code:")
-        return eventcode
