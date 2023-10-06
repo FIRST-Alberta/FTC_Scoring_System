@@ -9,7 +9,7 @@ class MDNS_Record():
         self.type = record_list[4]
         self.hostname = record_list[6]
         self.IP = IPv4Address(record_list[7])
-        self.text = record_list[9]
+        self.text = record_list[9].strip("\"")
 
 class MDNS_Interface():
 
@@ -19,21 +19,14 @@ class MDNS_Interface():
         return
     
     def browse(self):
+        self.records = []
         output = Run_Cmd("avahi-browse -trpk {}".format(self.record_type))
         if output is not None:
             for record in output.split("\n"):
                 if record.startswith("=;"):
                     if "IPv4" in record:
-                        self.update_record(MDNS_Record(record))
+                        self.records.append(MDNS_Record(record))
         return
-    
-    def update_record(self, new_record: MDNS_Record):
-        for index, record in enumerate(self.records):
-            if new_record.hostname == record.hostname:
-                self.records.pop(index)
-                self.records.append(new_record)
-                break
-        else:
-            self.records.append(new_record)
+
 
         

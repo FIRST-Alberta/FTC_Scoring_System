@@ -16,11 +16,10 @@ Intel NUC 11 with:
 * Booster(s): D-Link AC1200 Mesh Wi-Fi Range Extender (DAP-1610)
 
 ### Display
-Raspberry Pi Zero Wireless with:
-* Aluminium Case
+Raspberry Pi 4 (8GB) with:
+* Case with Fan
 * 32 GB Class 10 SD Card
 * Dedicated 3A Power supply
-* BrosTrend AC650 Long Range Dual Band Wi-Fi Adapter
 * FullPageOS
 
 ## Server Setup
@@ -31,9 +30,39 @@ Raspberry Pi Zero Wireless with:
 ### Package Requirements
 
 * pip
-    - pycurl
-    - requests
+    - PySimpleGui
 * apt:
-    - libssl-dev
-    - libcurl4-openssl-dev
     - openjdk-18-jdk
+
+# New FTC Live Installation for Linux
+
+1. Navigate to https://ftc-scoring.firstinspires.org/local/2024. The site should register your operating system as Linux x86_64. Press Download.
+2. Open a terminal and use the commands
+```
+> mkdir ~/Documents/FTCLiveLauncher
+> tar -xvf FTCLive CENTERSTAGE 2024-5.0.1-linux_amd64.tar.gz --directory ~/Documents/FTCLiveLauncher
+```
+
+3. Rename the file "FTCLive CENTERSTAGE 2024" to "FTCLive"
+
+4. Download a FIRST Tech Challenge logo in a PNG format and copy it to ~/Documents/FTCLiveLauncher/FTC_Logo.png
+
+5. Using the terminal:
+```
+sudo vim ~/.local/share/applications/ftc_live.desktop
+```
+
+6. Copy the following except and paste it in by pressing i followed by CTRL+SHIFT+v. Once the text is pasted, press :x to save and exit.
+
+```
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=/home/ftc/Documents/FTCLiveLauncher/FTCLive
+Name=FTC Live
+Icon=/home/ftc/Documents/FTCLiveLauncher/FTC_Logo.png
+```
+
+7. Navigate to your applications and click FTC Live to launch the application and complete installation. The system will automatically be launched. Right click on the application in the applications pane to save it to favourites.
