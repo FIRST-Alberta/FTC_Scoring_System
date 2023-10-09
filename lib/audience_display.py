@@ -1,4 +1,5 @@
 from .display import Display
+from .common.utilities import Move_File_Contents_to_Remote_Host
 
 __DISPLAY_OPTIONS__ = {
                         "bindToField": ["all", "1", "2"],
@@ -13,8 +14,8 @@ __DISPLAY_OPTIONS__ = {
 
 class Audience_Display(Display):
     def __init__(self, hostname, role, ip_address, event_code):
-        self.url = "http://{host}:8080/event/{code}/display/?type=audience&{options}"
         super().__init__(hostname, role, ip_address, event_code)
+        self.url = "http://{host}:8080/event/{code}/display/?type=audience&{options}"
 
     def Apply_Config(self, config: dict):
 
@@ -31,7 +32,9 @@ class Audience_Display(Display):
         options += "name={}".format(self.hostname)
         
         self.completed_url = self.url.format(host=self.server, code=self.event_code, options=options)
-        self.complete_Service_File()
-        # Call methods to actually apply these variables
+        print(self.completed_url)
+        Move_File_Contents_to_Remote_Host(self.completed_url, "/boot/fullpageos.txt", self.hostname)
+        self.apply_Service_File()
+        
             
 

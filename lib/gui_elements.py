@@ -35,20 +35,19 @@ __AUDIENCE_FRAME__ = sg.pin(sg.Frame("Role Settings",
                          [sg.Text("Alliance Orientation:"), sg.Combo(__DISPLAY_OPTIONS__["allianceOrientation"], default_value="standard", expand_x=True, readonly=True, key="allianceOrientation-a")],
                          [sg.Text("Rankings Font Size:"), sg.Combo(__DISPLAY_OPTIONS__["rankingsFontSize"], default_value="larger", expand_x=True, readonly=True, key="rankingsFontSize-a")],
                          [sg.Checkbox("Live Score:", default=True, key="liveScores-a")],
-                         [sg.Checkbox("Mute:", default=False, key="mute-a")],
-                         [sg.Checkbox("Mute Randomization and Results:", default=False, key="muteRandomizationResults-a")]
+                         [sg.Checkbox("Mute:", default=True, key="mute-a")],
+                         [sg.Checkbox("Mute Randomization and Results:", default=True, key="muteRandomizationResults-a")]
                         ],
                         size=__FRAME_SIZE__, key="-AUDIENCE-FRAME-", visible=False))
 
 __FIELD_FRAME__ = sg.pin(sg.Frame("Role Settings",
-                        [[sg.Text("Bind to Field:"), sg.Combo(__DISPLAY_OPTIONS__["bindToField"], default_value="all", expand_x=True, readonly=True, key="bindToField-f")],
-                         [sg.Checkbox("Use Field-Style Timer:", default=True, key="fieldStyleTimer-f")],
-                         [sg.Text("Scoring Bar Location:"), sg.Combo(__DISPLAY_OPTIONS__["scoringBarLocation"], default_value="bottom", expand_x=True, readonly=True, key="scoringBarLocation-f")],
+                        [[sg.Text("Scoring Bar Location:"), sg.Combo(__DISPLAY_OPTIONS__["scoringBarLocation"], default_value="bottom", expand_x=True, readonly=True, key="scoringBarLocation-f")],
                          [sg.Text("Alliance Orientation:"), sg.Combo(__DISPLAY_OPTIONS__["allianceOrientation"], default_value="standard", expand_x=True, readonly=True, key="allianceOrientation-f")],
                          [sg.Text("Rankings Font Size:"), sg.Combo(__DISPLAY_OPTIONS__["rankingsFontSize"], default_value="larger", expand_x=True, readonly=True, key="rankingsFontSize-f")],
+                         [sg.Checkbox("Use Field-Style Timer:", default=True, key="fieldStyleTimer-f")],
                          [sg.Checkbox("Live Score:", default=True, key="liveScores-f")],
-                         [sg.Checkbox("Mute:", default=False, key="mute-f")],
-                         [sg.Checkbox("Mute Randomization and Results:", default=False, key="muteRandomizationResults-f")]
+                         [sg.Checkbox("Mute:", default=True, key="mute-f")],
+                         [sg.Checkbox("Mute Randomization and Results:", default=True, key="muteRandomizationResults-f")]
                         ],
                         size=__FRAME_SIZE__, key="-FIELD-FRAME-", visible=False))
 

@@ -19,7 +19,7 @@ layout = [[sg.Text("Display:"), __DISPLAY_SELECTOR__, sg.Button("Update")],
           [frames.__INSPECTION_FRAME__],
           [frames.__PIT_FRAME__],
           [frames.__SPONSOR_FRAME__],
-          [sg.Button("Exit"), sg.Button("Apply")]]
+          [sg.Button("Exit"), sg.Button("Apply"), sg.Button("Restart Display", key="Restart")]]
 
 window = sg.Window("Display Configurator", layout)
 visible_frame = "-EMPTY-FRAME-"
@@ -54,7 +54,10 @@ while True:
             window["-DISPLAY-"].update(value=values["-DISPLAY-"],values=display_manager.displays)
             
         values["-DISPLAY-"].Apply_Config(values)
-        
+        values["-DISPLAY-"].Reload_Services()
+
+    if event == "Restart":
+        values["-DISPLAY-"].Reboot_Display()    
 
     # Combos #
     ##########
